@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Carbono</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="page-header">
+        <p class="eyebrow">Carbono Calculator</p>
+        <h1>Calcule o impacto <span>da sua viagem</span></h1>
+        <p class="subtitle">
+          Escolha uma rota e um meio de transporte para estimar a emissão de
+          CO2.
+        </p>
+      </header>
+
+      <section class="calculator" aria-labelledby="calculator-title">
+        <h2 id="calculator-title">Nova estimativa</h2>
+        <form id="calculator-form">
+          <div class="location-fields">
+            <div>
+              <label for="origin">Origem</label>
+              <input
+                id="origin"
+                name="origin"
+                type="text"
+                placeholder="Ex.: Sao Paulo"
+                list="origin-list"
+                required
+              />
+            </div>
+            <div>
+              <label for="destination">Destino</label>
+              <input
+                id="destination"
+                name="destination"
+                type="text"
+                placeholder="Ex.: Rio de Janeiro"
+                list="destination-list"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="distance-heading">
+            <label for="distance">Distancia (km)</label>
+            <label class="distance-toggle">
+              <input id="manual-distance" type="checkbox" />
+              <span>Definir manualmente</span>
+            </label>
+          </div>
+          <input
+            id="distance"
+            name="distance"
+            type="number"
+            min="1"
+            step="0.1"
+            placeholder="Calculada automaticamente"
+            disabled
+          />
+          <p id="distance-help" class="field-help">
+            A distancia sera obtida com base na origem e no destino.
+          </p>
+
+          <label for="transport">Transporte</label>
+          <div
+            class="transport-options"
+            role="radiogroup"
+            aria-label="Escolha o transporte"
+          >
+            <label class="transport-option">
+              <input type="radio" name="transport" value="bicycle" required />
+              <span class="transport-icon" aria-hidden="true">🚲</span>
+              <span>Bicicleta</span>
+            </label>
+            <label class="transport-option">
+              <input type="radio" name="transport" value="car" />
+              <span class="transport-icon" aria-hidden="true">🚗</span>
+              <span>Carro</span>
+            </label>
+            <label class="transport-option">
+              <input type="radio" name="transport" value="bus" />
+              <span class="transport-icon" aria-hidden="true">🚌</span>
+              <span>Onibus</span>
+            </label>
+            <label class="transport-option">
+              <input type="radio" name="transport" value="truck" />
+              <span class="transport-icon" aria-hidden="true">🚚</span>
+              <span>Caminhao</span>
+            </label>
+          </div>
+
+          <label for="passengers">Passageiros</label>
+          <input
+            id="passengers"
+            name="passengers"
+            type="number"
+            min="1"
+            value="1"
+            required
+          />
+
+          <button type="submit">Calcular emissão</button>
+        </form>
+      </section>
+
+      <section id="result" class="result" aria-live="polite" hidden>
+        <h2>Resultado</h2>
+        <p id="result-text" class="result-summary"></p>
+        <dl class="result-details">
+          <div>
+            <dt>Origem</dt>
+            <dd id="result-origin"></dd>
+          </div>
+          <div>
+            <dt>Destino</dt>
+            <dd id="result-destination"></dd>
+          </div>
+          <div>
+            <dt>Distância</dt>
+            <dd id="result-distance"></dd>
+          </div>
+          <div>
+            <dt>Veículo</dt>
+            <dd id="result-transport"></dd>
+          </div>
+          <div>
+            <dt>Passageiros</dt>
+            <dd id="result-passengers"></dd>
+          </div>
+          <div>
+            <dt>Fator de emissão</dt>
+            <dd id="result-factor"></dd>
+          </div>
+        </dl>
+        <div class="calculation-box">
+          <span class="calculation-label">Cálculo</span>
+          <strong id="result-calculation"></strong>
+        </div>
+        <div class="emission-values">
+          <div>
+            <span>Emissão total</span>
+            <strong id="result-total"></strong>
+          </div>
+          <div>
+            <span>Por passageiro</span>
+            <strong id="result-per-passenger"></strong>
+          </div>
+        </div>
+        <div class="credits-panel">
+          <div class="credits-heading">
+            <div>
+              <span class="credits-kicker">Compensação ambiental</span>
+              <h3>Créditos de carbono</h3>
+            </div>
+            <span class="credits-mark" aria-hidden="true">CO2</span>
+          </div>
+          <div class="credits-main">
+            <div class="credit-total">
+              <strong id="result-credits"></strong>
+              <span>para compensar esta viagem</span>
+            </div>
+            <div class="credit-person">
+              <span>Por passageiro</span>
+              <strong id="result-credits-per-passenger"></strong>
+            </div>
+          </div>
+          <div class="credits-progress" aria-hidden="true">
+            <span id="credits-progress"></span>
+          </div>
+          <p>
+            1 crédito compensa 1.000 kg de CO2. O valor acima é a quantidade
+            estimada necessária para neutralizar a emissão calculada.
+          </p>
+        </div>
+        <div class="comparison-panel">
+          <div class="comparison-heading">
+            <div>
+              <span class="calculation-label">Comparação</span>
+              <h3>Outros meios de transporte</h3>
+            </div>
+          </div>
+          <div class="comparison-legend">
+            <span><i aria-hidden="true"></i> Emissão por passageiro</span>
+            <span>Barra maior = maior emissão</span>
+          </div>
+          <ul id="transport-comparison" class="transport-comparison"></ul>
+        </div>
+      </section>
+
+      <datalist id="origin-list"></datalist>
+      <datalist id="destination-list"></datalist>
+    </main>
+
+    <script src="js/routes-data.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
